@@ -1,33 +1,18 @@
 steps:
-# 1. Build the Docker image
 - name: 'gcr.io/cloud-builders/docker'
   id: Build
-  args:
-    - 'build'
-    - '-t'
-    - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-docker-repo/my-python-app:$COMMIT_SHA'
-    - '.'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-docker-repo/todo-app:latest', '.']
 
-# 2. Push the Docker image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
   id: Push
-  args:
-    - 'push'
-    - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-docker-repo/my-python-app:$COMMIT_SHA'
+  args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-docker-repo/todo-app:latest']
 
-# 3. Deploy the container image to Cloud Run
-- name: 'gcr.io/google.com/cloudsdk/cloud-sdk'
+- name: 'gcr.io/cloud-builders/kubectl'
   id: Deploy
-  args:
-    - 'gcloud'
-    - 'run'
-    - 'deploy'
-    - 'my-python-app'
-    - '--image'
-    - 'us-central1-docker.pkg.dev/$PROJECT_ID/my-docker-repo/my-python-app:$COMMIT_SHA'
-    - '--region'
-    - 'us-central1'
-    - '--platform'
-    - 'managed'
-    - '--allow-unauthenticated'
-    - '--quiet'
+  args: ['apply', '-f', 'kubernetes/', '--recursive']
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
+
+options:
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
