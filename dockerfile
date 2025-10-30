@@ -13,10 +13,10 @@ COPY app.py .
 
 # Set the environment variables
 ENV APP_VERSION="1.0"
-ENV PORT 8080
+ENV PORT 5000
 
 # Expose the port used by the container (matches the service YAML targetPort)
-EXPOSE 8080
+EXPOSE 5000
 
 # Run the application using Gunicorn for production
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
