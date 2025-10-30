@@ -9,7 +9,7 @@ steps:
 
 - name: 'gcr.io/cloud-builders/kubectl'
   id: Deploy
-  args: ['apply', '-f', 'kubernetes/', '--recursive']
+  args: ['apply', '-f', 'k8s/', '--recursive']
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
     - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
