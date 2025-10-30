@@ -17,6 +17,6 @@ spec:
       containers:
       - name: my-app-container
         # Cloud Build will automatically replace the image tag during deployment
-        image: us-central1-docker.pkg.dev/${PROJECT_ID}/my-docker-repo/my-gke-app:latest
+        image: us-central1-docker.pkg.dev/[PROJECT_ID]/my-docker-repo/todo-app:latest
         ports:
         - containerPort: 5000 # This must match the port exposed in the Dockerfile

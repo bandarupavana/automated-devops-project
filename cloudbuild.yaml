@@ -1,3 +1,5 @@
+# Cloud Build Configuration for GKE Deployment
+
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: Build
@@ -6,6 +8,14 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: Push
   args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/my-docker-repo/todo-app:latest']
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Substitute
+  entrypoint: bash
+  args:
+    - '-c'
+    - |
+      find k8s/ -name "*.yaml" -exec sed -i "s|\[PROJECT_ID\]|${PROJECT_ID}|g" {} \;
 
 - name: 'gcr.io/cloud-builders/kubectl'
   id: Deploy
