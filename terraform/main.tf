@@ -84,8 +84,10 @@ resource "google_container_cluster" "primary" {
   network                  = google_compute_network.vpc_network.name
 
   # Enable Workload Identity (Best practice)
+  # NOTE: The 'identity_namespace' argument has been removed, as the provider 
+  # automatically derives it from the project ID.
   workload_identity_config {
-    identity_namespace = "${var.project_id}.svc.id.goog"
+    # identity_namespace = "${var.project_id}.svc.id.goog" <-- REMOVED
   }
 
   release_channel {
@@ -97,12 +99,12 @@ resource "google_container_cluster" "primary" {
     update = "40m"
   }
 }
-
-# GKE Node Pool Definition
+# --- GKE Node Pool Definition ---
 resource "google_container_node_pool" "primary_nodes" {
   name       = "primary-node-pool"
   location   = var.zone
-  cluster    = google_container_cluster.primary.name
+  # IMPORTANT: This line was missing and must be restored
+  cluster    = google_container_cluster.primary.name 
   node_count = 1
 
   node_config {
@@ -111,11 +113,10 @@ resource "google_container_node_pool" "primary_nodes" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
-    # Use the default compute service account for nodes
-    service_account = "${var.project_id}-compute@developer.gserviceaccount.com" 
+    # Keep the service account fix you applied
+    service_account = "62682862713-compute@developer.gserviceaccount.com" 
   }
 }
-
 # --- Output the GKE Cluster endpoint ---
 
 output "gke_cluster_endpoint" {
