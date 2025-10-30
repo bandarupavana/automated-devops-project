@@ -1,0 +1,14 @@
+# Terraform Ignore Rules
+
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraformrc
+terraform.rc
+.credentials.json
+crash.log
+.vscode/
+venv/
+__pycache__/
+*.pyc
+.dockerignore
